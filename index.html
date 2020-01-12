@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -8,6 +7,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
 </head>
 <body>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -28,11 +40,13 @@
 </nav>
 <div class = "container-fluid"></div>
 <img src="images/meter-sunset.jpg" class="img-fluid" alt="Responsive image">
+<label for="where-to"> Where To:</label>
+        <!-- <input type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address"> -->
+<input id="pac-input" class="form-control" type="text" placeholder="Enter a location">
 <form style="background-color: lightgray; padding: 10px">
-    <div class="form-group">
-        <label for="where-to"> Where To:</label>
-        <input type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address">
-    </div>
+    <!-- <div class="form-group">
+        
+    </div> -->
     <p> Walking Distance: </p>
     <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin: 5px">
         <label class="btn btn-secondary">
@@ -47,5 +61,111 @@
     </div>
     <button type="submit" class="btn btn-dark"> Submit </button>
 </form>
+<div id="map"></div>
+    <script>
+      var map;
+      var service;
+      var infowindow;
+
+      
+
+      function initMap() {
+        var vancouver = new google.maps.LatLng(49.2827, -123.1207);
+        var input = document.getElementById('pac-input');
+        infowindow = new google.maps.InfoWindow();
+
+        map = new google.maps.Map(
+            document.getElementById('map'), {center: vancouver, zoom: 11});
+        
+
+        var marker = new google.maps.Marker({
+          map: map,
+          anchorPoint: new google.maps.Point(0, -29)
+        });
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        
+        autocomplete.bindTo('bounds', map);
+        // Set the data fields to return when the user selects a place.
+        autocomplete.setFields(
+          ['address_components', 'geometry', 'icon', 'name']);
+
+          autocomplete.addListener('place_changed', function() {
+          infowindow.close();
+          marker.setVisible(false);
+          var place = autocomplete.getPlace();
+          if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+          }
+
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(27);  // Why 17? Because it looks good.
+          }
+          marker.setPosition(place.geometry.location);
+          marker.setVisible(true);
+
+          var address = '';
+          if (place.address_components) {
+            address = [
+              (place.address_components[0] && place.address_components[0].short_name || ''),
+              (place.address_components[1] && place.address_components[1].short_name || ''),
+              (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+          }
+
+
+          // Add circle overlay and bind to marker
+          var circle = new google.maps.Circle({
+              map: map,
+              radius: 1000,    // 10 miles in metres
+              fillColor: '#00000000',
+              strokeColor: '#297bff'
+          });
+          circle.bindTo('center', marker, 'position');
+          searchLocation(place.geometry.location.lat(), place.geometry.location.lng(), map)
+        });
+
+        
+      }
+
+      function searchLocation(place_lat, place_lng, map) {
+        var request = {
+          query: 'parking lots',
+          fields: ['name', 'geometry'],
+          location: {lat: place_lat , lng: place_lng},
+          radius: 400
+        };
+
+        var service = new google.maps.places.PlacesService(map);
+
+        service.textSearch(request, function(results, status) {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            for (var i = 0; i < results.length; i++) {
+              createMarker(results[i]);
+            }
+          }
+        });
+      }
+
+      function createMarker(place) {
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.setContent(place.name);
+          infowindow.open(map, this);
+        });
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPCfCDiuyrB7TgB6Qv6-pkDrO411LsYfk&libraries=places&callback=initMap"
+    async defer></script>
 </body>
 </html>

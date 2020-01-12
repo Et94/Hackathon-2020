@@ -40,12 +40,13 @@
 </nav>
 <div class = "container-fluid"></div>
 <img src="images/meter-sunset.jpg" class="img-fluid" alt="Responsive image">
-<form style="background-color: lightgray; padding: 10px">
-    <div class="form-group">
-        <label for="where-to"> Where To:</label>
+<label for="where-to"> Where To:</label>
         <!-- <input type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address"> -->
-        <input id="pac-input" type="text" placeholder="Enter a location">
-    </div>
+<input id="pac-input" class="form-control" type="text" placeholder="Enter a location">
+<form style="background-color: lightgray; padding: 10px">
+    <!-- <div class="form-group">
+        
+    </div> -->
     <p> Walking Distance: </p>
     <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin: 5px">
         <label class="btn btn-secondary">
@@ -82,7 +83,10 @@
           location: {lat: 49.2827, lng:-123.1207},
           radius: 400
         };
-        
+        var marker = new google.maps.Marker({
+          map: map,
+          anchorPoint: new google.maps.Point(0, -29)
+        });
         var autocomplete = new google.maps.places.Autocomplete(input);
         
         autocomplete.bindTo('bounds', map);

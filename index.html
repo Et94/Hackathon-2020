@@ -66,6 +66,7 @@
       var map;
       var service;
       var infowindow;
+      var markers = []
 
 
       var timeWalkDist;
@@ -98,6 +99,7 @@
         timeWalkDist = 500;
         map = new google.maps.Map(
             document.getElementById('map'), {center: vancouver, zoom: 11});
+        generateHeatMap(map);
         
 
         var marker = new google.maps.Marker({
@@ -150,7 +152,9 @@
               strokeColor: '#297bff'
           });
           circle.bindTo('center', marker, 'position');
-          searchLocation(place.geometry.location.lat(), place.geometry.location.lng(), map)
+          deleteMarkers();
+          searchLocation(place.geometry.location.lat(), place.geometry.location.lng(), map);
+          getTicketData();
         });
 
         
@@ -180,14 +184,38 @@
           map: map,
           position: place.geometry.location
         });
+        markers.push(marker)
+
 
         google.maps.event.addListener(marker, 'click', function() {
           infowindow.setContent(place.name);
           infowindow.open(map, this);
         });
       }
+
+      function deleteMarkers() {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+        markers = [];
+      }
+
+      function generateHeatMap(map) {
+        var heatmapData = [
+        new google.maps.LatLng(49.289070, -123.125500),
+        new google.maps.LatLng(49.289520, -123.127050),
+        new google.maps.LatLng(49.280320, -123.121320),
+        new google.maps.LatLng(49.286940, -123.124900),
+        new google.maps.LatLng(49.271530, -123.107830),
+        new google.maps.LatLng(49.270140, -123.110060),
+        ];
+        var heatmap = new google.maps.visualization.HeatmapLayer({
+          data: heatmapData
+        });
+        heatmap.setMap(map);
+      }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPCfCDiuyrB7TgB6Qv6-pkDrO411LsYfk&libraries=places&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPCfCDiuyrB7TgB6Qv6-pkDrO411LsYfk&libraries=places,visualization&callback=initMap"
     async defer></script>
 </body>
 </html>

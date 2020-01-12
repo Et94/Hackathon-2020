@@ -50,10 +50,10 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav text-uppercase ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="#about" style="color: #23272b">About</a>
+                    <a class="nav-link js-scroll-trigger" href="about.html">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="Hackathon-2020\login.html" style="color: #23272b">Login</a>
+                    <a class="nav-link js-scroll-trigger" href="login.html">Login</a>
                 </li>
             </ul>
         </div>
@@ -69,8 +69,9 @@
             <div style="background-color: #23272b;">
                 <form style=";padding: 10px;">
                     <div class="form-group">
-                        <label for="where-to" style="color: white"> Where To:</label>
-                        <input id="pac-input" type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address">
+                        <label for="pac-input" style="color: white"> Where To:</label>
+<!--                        <input type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address">-->
+                        <input id="pac-input" class="form-control" type="text" placeholder="Enter a location">
                     </div>
                     <p style="color: white"> Walking Distance: </p>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin: 5px">
@@ -90,11 +91,12 @@
         </div>
     </div>
 </header>
-</div>
+
+
 <!--<div class = "container-fluid"></div>-->
 <!--<img src="images/meter-sunset.jpg" class="img-fluid" alt="Responsive image">-->
 <!--<label for="where-to"> Where To:</label>-->
-<!--        &lt;!&ndash; <input type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address"> &ndash;&gt;-->
+<!--         <input type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address"> -->
 <!--<input id="pac-input" class="form-control" type="text" placeholder="Enter a location">-->
 <!--<form style="background-color: lightgray; padding: 10px">-->
     <!-- <div class="form-group">
@@ -114,6 +116,7 @@
 <!--    </div>-->
 <!--    <button type="submit" class="btn btn-dark"> Submit </button>-->
 <!--</form>-->
+
 <div id="map"></div>
     <script>
       var map;

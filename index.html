@@ -73,7 +73,7 @@
             <div class="intro-heading text-uppercase"> text </div>
             <!--        <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Tell Me More</a>-->
             <div style="background-color: #23272b;">
-                <form style=";padding: 10px;">
+                <div style=";padding: 10px;">
                     <div class="form-group">
                         <label for="where-to" style="color: white"> Where To:</label>
                         <input id="pac-input" type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address">
@@ -90,8 +90,8 @@
                             <input type="radio" name="options" id="thirty-min" autocomplete="off"> 30 Minutes
                         </label>
                     </div>
-                    <button type="submit" class="btn btn-dark" style="padding: 10px"> Submit </button>
-                </form>
+                    <button type="submit" class="btn btn-dark" style="padding: 10px" onclick="selectButton()"> Submit </button>
+                  </div>
             </div>
         </div>
     </div>
@@ -128,8 +128,10 @@
       var map;
       var service;
       var infowindow;
-      var markers = []
-
+      var markers = [];
+      var circle;
+      var place;
+      var marker;
 
 
       var timeWalkDist;
@@ -141,9 +143,7 @@
         var btOneMin = $('#one-min').is(':checked') ? 1 : 0;
         var btFiveMin = $('#five-min').is(':checked') ? 1 : 0;
         var btThirtyMin = $('#thirty-min').is(':checked') ? 1 : 0;
-        console.log(btOneMin);
-        console.log(btFiveMin);
-        console.log(btThirtyMin);
+
         if(btOneMin){
             timeWalkDist = 500;
           }
@@ -153,6 +153,7 @@
         if (btThirtyMin){
           timeWalkDist = 3000;
         }
+        setCirclesAndMarkers();
       }
 
 
@@ -166,7 +167,7 @@
 
         generateHeatMap(map);
 
-        var marker = new google.maps.Marker({
+        marker = new google.maps.Marker({
           map: map,
           anchorPoint: new google.maps.Point(0, -29)
         });
@@ -179,45 +180,15 @@
 
           autocomplete.addListener('place_changed', function() {
           infowindow.close();
+
           marker.setVisible(false);
-          var place = autocomplete.getPlace();
+          place = autocomplete.getPlace();
           if (!place.geometry) {
             // User entered the name of a Place that was not suggested and
             // pressed the Enter key, or the Place Details request failed.
             window.alert("No details available for input: '" + place.name + "'");
             return;
           }
-
-          // If the place has a geometry, then present it on a map.
-          if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-          } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(27);  // Why 17? Because it looks good.
-          }
-          marker.setPosition(place.geometry.location);
-          marker.setVisible(true);
-
-          var address = '';
-          if (place.address_components) {
-            address = [
-              (place.address_components[0] && place.address_components[0].short_name || ''),
-              (place.address_components[1] && place.address_components[1].short_name || ''),
-              (place.address_components[2] && place.address_components[2].short_name || '')
-            ].join(' ');
-          }
-
-
-          // Add circle overlay and bind to marker
-          var circle = new google.maps.Circle({
-              map: map,
-              radius: timeWalkDist,    // 10 miles in metres
-              fillColor: '#00000000',
-              strokeColor: '#297bff'
-          });
-          circle.bindTo('center', marker, 'position');
-          deleteMarkers();
-          searchLocation(place.geometry.location.lat(), place.geometry.location.lng(), map);
         });
 
 
@@ -261,6 +232,44 @@
             markers[i].setMap(null);
         }
         markers = [];
+      }
+
+      function setCirclesAndMarkers(){
+        if(circle != null){
+            circle.setMap(null);
+          }
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(27);  // Why 17? Because it looks good.
+          }
+          marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+          marker.setPosition(place.geometry.location);
+          marker.setVisible(true);
+
+
+          var address = '';
+          if (place.address_components) {
+            address = [
+              (place.address_components[0] && place.address_components[0].short_name || ''),
+              (place.address_components[1] && place.address_components[1].short_name || ''),
+              (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+          }
+
+
+          // Add circle overlay and bind to marker
+          circle = new google.maps.Circle({
+              map: map,
+              radius: timeWalkDist,    // 10 miles in metres
+              fillColor: '#00000000',
+              strokeColor: '#297bff'
+          });
+          circle.bindTo('center', marker, 'position');
+          deleteMarkers();
+          searchLocation(place.geometry.location.lat(), place.geometry.location.lng(), map);
       }
 
       function generateHeatMap(map) {

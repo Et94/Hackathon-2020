@@ -145,13 +145,13 @@
         var btThirtyMin = $('#thirty-min').is(':checked') ? 1 : 0;
 
         if(btOneMin){
-            timeWalkDist = 500;
+            timeWalkDist = 80;
           }
         if (btFiveMin){
-          timeWalkDist = 1000;
+          timeWalkDist = 400;
         }
         if (btThirtyMin){
-          timeWalkDist = 3000;
+          timeWalkDist = 2400;
         }
         setCirclesAndMarkers();
       }
@@ -243,7 +243,7 @@
             map.fitBounds(place.geometry.viewport);
           } else {
             map.setCenter(place.geometry.location);
-            map.setZoom(27);  // Why 17? Because it looks good.
+            map.setZoom(17);  // Why 17? Because it looks good.
           }
           marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
           marker.setPosition(place.geometry.location);

@@ -66,6 +66,7 @@
       var map;
       var service;
       var infowindow;
+      var markers = []
 
       
 
@@ -128,7 +129,8 @@
               strokeColor: '#297bff'
           });
           circle.bindTo('center', marker, 'position');
-          searchLocation(place.geometry.location.lat(), place.geometry.location.lng(), map)
+          deleteMarkers();
+          searchLocation(place.geometry.location.lat(), place.geometry.location.lng(), map);
         });
 
         
@@ -158,11 +160,20 @@
           map: map,
           position: place.geometry.location
         });
+        markers.push(marker)
+
 
         google.maps.event.addListener(marker, 'click', function() {
           infowindow.setContent(place.name);
           infowindow.open(map, this);
         });
+      }
+
+      function deleteMarkers() {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+        markers = [];
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPCfCDiuyrB7TgB6Qv6-pkDrO411LsYfk&libraries=places&callback=initMap"

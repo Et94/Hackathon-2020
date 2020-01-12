@@ -40,11 +40,13 @@
 </nav>
 <div class = "container-fluid"></div>
 <img src="images/meter-sunset.jpg" class="img-fluid" alt="Responsive image">
+<label for="where-to"> Where To:</label>
+        <!-- <input type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address"> -->
+<input id="pac-input" class="form-control" type="text" placeholder="Enter a location">
 <form style="background-color: lightgray; padding: 10px">
-    <div class="form-group">
-        <label for="where-to"> Where To:</label>
-        <input type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address">
-    </div>
+    <!-- <div class="form-group">
+        
+    </div> -->
     <p> Walking Distance: </p>
     <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin: 5px">
         <label class="btn btn-secondary">
@@ -69,18 +71,73 @@
 
       function initMap() {
         var vancouver = new google.maps.LatLng(49.2827, -123.1207);
-
+        var input = document.getElementById('pac-input');
         infowindow = new google.maps.InfoWindow();
 
         map = new google.maps.Map(
             document.getElementById('map'), {center: vancouver, zoom: 11});
-
+        
         var request = {
           query: 'parking lots',
           fields: ['name', 'geometry'],
           location: {lat: 49.2827, lng:-123.1207},
           radius: 400
         };
+        var marker = new google.maps.Marker({
+          map: map,
+          anchorPoint: new google.maps.Point(0, -29)
+        });
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        
+        autocomplete.bindTo('bounds', map);
+        // Set the data fields to return when the user selects a place.
+        autocomplete.setFields(
+          ['address_components', 'geometry', 'icon', 'name']);
+
+          autocomplete.addListener('place_changed', function() {
+          infowindow.close();
+          marker.setVisible(false);
+          var place = autocomplete.getPlace();
+          if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+          }
+
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(27);  // Why 17? Because it looks good.
+          }
+          marker.setPosition(place.geometry.location);
+          marker.setVisible(true);
+
+          var address = '';
+          if (place.address_components) {
+            address = [
+              (place.address_components[0] && place.address_components[0].short_name || ''),
+              (place.address_components[1] && place.address_components[1].short_name || ''),
+              (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+          }
+
+          infowindowContent.children['place-icon'].src = place.icon;
+          infowindowContent.children['place-name'].textContent = place.name;
+          infowindowContent.children['place-address'].textContent = address;
+          infowindow.open(map, marker);
+
+            // Add circle overlay and bind to marker
+            var circle = new google.maps.Circle({
+                map: map,
+                radius: 1000,    // 10 miles in metres
+                fillColor: '#00000000',
+                strokeColor: '#297bff'
+            });
+            circle.bindTo('center', marker, 'position');
+        });
 
         var service = new google.maps.places.PlacesService(map);
 

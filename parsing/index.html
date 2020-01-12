@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Data Parsing for QDS20</title>
+</head>
+<body>
+    <p>Replace the final line of the parseInfractions function with a call to your desired function. parseInfractions is called when a new file is selected below.</p><br />
+    <p>Select the parking ticket JSON file.</p>
+    <input type="file" id="fileInput" name="files[]" />
+    <script>
+        function fileSelectionHandler(event) {
+            let file = event.target.files[0];
+            let reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = function () {
+                let jsonData = JSON.parse(reader.result);
+                parseInfractions(jsonData);
+            }
+        }
+
+        document.getElementById('fileInput').addEventListener('change', fileSelectionHandler, false);
+
+        function parseInfractions(data) {
+            let infractions = [];
+
+            for (let i = 0; i < 1202284; i++) {  // Loop through infractions data, build array of infraction street names with weights associated
+                let currentInfraction = data[i];
+                let currentInfractionType = currentInfraction.fields.infractiontext;
+                if (!(currentInfractionType.startsWith('PARK IN A METERED SPACE IF THE PARKING METER HEAD DISPLAYS FOUR FLASHING ZEROS IN A WINDOW') ||
+                    currentInfractionType.startsWith('PARK IN A METERED SPACE IF THE TIME RECORDED BY THE OPERATOR UNDER THE PAY BY PHONE OR PAY BY LICENCE PLATE OPTION HAS EXPIRED') ||
+                    currentInfractionType.includes('WASH') || currentInfractionType.includes('WATER') || currentInfraction.fields.year != '2019')) {  // Exclude infractions for not paying for parking and water-related infractions
+                    let infractionAddress = currentInfraction.fields.block.toString() + " " + currentInfraction.fields.street;
+                    infractions.push(infractionAddress);
+                }
+            }
+            console.log('Finished parsing.');
+            console.log(infractions);  // Replace with call to your desired function
+        }
+
+        function exportCSV(addresses) {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += addresses.join(',');
+            let encodedUri = encodeURI(csvContent);
+            window.open(encodedUri, '_self');
+        }
+    </script>
+</body>
+</html>

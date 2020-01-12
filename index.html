@@ -40,49 +40,72 @@
 </nav>
 <div class = "container-fluid"></div>
 <img src="images/meter-sunset.jpg" class="img-fluid" alt="Responsive image">
-<form style="background-color: lightgray; padding: 10px">
-    <div class="form-group">
-        <label for="where-to"> Where To:</label>
+<label for="where-to"> Where To:</label>
         <!-- <input type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address"> -->
-        <input id="pac-input" type="text" placeholder="Enter a location">
-    </div>
+<input id="pac-input" class="form-control" type="text" placeholder="Enter a location">
+<form style="background-color: lightgray; padding: 10px" id="walking_form">
+    <!-- <div class="form-group">
+        
+    </div> -->
     <p> Walking Distance: </p>
     <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin: 5px">
         <label class="btn btn-secondary">
-            <input type="radio" name="options" id="one-min" autocomplete="off" checked> 1 Minute
+            <input type="radio" name="options" id="one-min" autocomplete="off" checked > 1 Minute
         </label>
         <label class="btn btn-secondary">
-            <input type="radio" name="options" id="five-min" autocomplete="off"> 5 Minutes
+            <input type="radio" name="options" id="five-min" autocomplete="off" > 5 Minutes
         </label>
         <label class="btn btn-secondary">
-            <input type="radio" name="options" id="thirty-min" autocomplete="off"> 30 Minutes
+            <input type="radio" name="options" id="thirty-min" autocomplete="off" > 30 Minutes
         </label>
     </div>
-    <button type="submit" class="btn btn-dark"> Submit </button>
+    <button type="submit" class="btn btn-dark" onclick="selectButton()"> Submit </button>
 </form>
 <div id="map"></div>
     <script>
       var map;
       var service;
       var infowindow;
+      var markers = []
 
+
+      var timeWalkDist;
+      $("#walking_form").submit(function(e) {
+          e.preventDefault();
+      });
       
+      function selectButton(){
+        var btOneMin = $('#one-min').is(':checked') ? 1 : 0;
+        var btFiveMin = $('#five-min').is(':checked') ? 1 : 0;
+        var btThirtyMin = $('#thirty-min').is(':checked') ? 1 : 0;
+        console.log(btOneMin);
+        console.log(btFiveMin);
+        console.log(btThirtyMin);
+        if(btOneMin){
+            timeWalkDist = 500;
+          }
+        if (btFiveMin){
+          timeWalkDist = 1000;
+        }
+        if (btThirtyMin){
+          timeWalkDist = 3000;
+        }
+      }
 
       function initMap() {
         var vancouver = new google.maps.LatLng(49.2827, -123.1207);
         var input = document.getElementById('pac-input');
         infowindow = new google.maps.InfoWindow();
-
+        timeWalkDist = 500;
         map = new google.maps.Map(
             document.getElementById('map'), {center: vancouver, zoom: 11});
+        generateHeatMap(map);
         
-        var request = {
-          query: 'parking lots',
-          fields: ['name', 'geometry'],
-          location: {lat: 49.2827, lng:-123.1207},
-          radius: 400
-        };
-        
+
+        var marker = new google.maps.Marker({
+          map: map,
+          anchorPoint: new google.maps.Point(0, -29)
+        });
         var autocomplete = new google.maps.places.Autocomplete(input);
         
         autocomplete.bindTo('bounds', map);
@@ -120,20 +143,30 @@
             ].join(' ');
           }
 
-          infowindowContent.children['place-icon'].src = place.icon;
-          infowindowContent.children['place-name'].textContent = place.name;
-          infowindowContent.children['place-address'].textContent = address;
-          infowindow.open(map, marker);
 
-            // Add circle overlay and bind to marker
-            var circle = new google.maps.Circle({
-                map: map,
-                radius: 1000,    // 10 miles in metres
-                fillColor: '#00000000',
-                strokeColor: '#297bff'
-            });
-            circle.bindTo('center', marker, 'position');
+          // Add circle overlay and bind to marker
+          var circle = new google.maps.Circle({
+              map: map,
+              radius: timeWalkDist,    // 10 miles in metres
+              fillColor: '#00000000',
+              strokeColor: '#297bff'
+          });
+          circle.bindTo('center', marker, 'position');
+          deleteMarkers();
+          searchLocation(place.geometry.location.lat(), place.geometry.location.lng(), map);
+          getTicketData();
         });
+
+        
+      }
+
+      function searchLocation(place_lat, place_lng, map) {
+        var request = {
+          query: 'parking lots',
+          fields: ['name', 'geometry'],
+          location: {lat: place_lat , lng: place_lng},
+          radius: timeWalkDist
+        };
 
         var service = new google.maps.places.PlacesService(map);
 
@@ -142,7 +175,6 @@
             for (var i = 0; i < results.length; i++) {
               createMarker(results[i]);
             }
-            map.setCenter(vancouver);
           }
         });
       }
@@ -152,14 +184,38 @@
           map: map,
           position: place.geometry.location
         });
+        markers.push(marker)
+
 
         google.maps.event.addListener(marker, 'click', function() {
           infowindow.setContent(place.name);
           infowindow.open(map, this);
         });
       }
+
+      function deleteMarkers() {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+        markers = [];
+      }
+
+      function generateHeatMap(map) {
+        var heatmapData = [
+        new google.maps.LatLng(49.289070, -123.125500),
+        new google.maps.LatLng(49.289520, -123.127050),
+        new google.maps.LatLng(49.280320, -123.121320),
+        new google.maps.LatLng(49.286940, -123.124900),
+        new google.maps.LatLng(49.271530, -123.107830),
+        new google.maps.LatLng(49.270140, -123.110060),
+        ];
+        var heatmap = new google.maps.visualization.HeatmapLayer({
+          data: heatmapData
+        });
+        heatmap.setMap(map);
+      }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPCfCDiuyrB7TgB6Qv6-pkDrO411LsYfk&libraries=places&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPCfCDiuyrB7TgB6Qv6-pkDrO411LsYfk&libraries=places,visualization&callback=initMap"
     async defer></script>
 </body>
 </html>

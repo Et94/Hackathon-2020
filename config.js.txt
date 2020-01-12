@@ -1,0 +1,3 @@
+var config = {
+    apiKey = "AIzaSyBPCfCDiuyrB7TgB6Qv6-pkDrO411LsYfk"
+}

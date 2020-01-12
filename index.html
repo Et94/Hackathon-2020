@@ -6,6 +6,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="data.json"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <style>
       /* Always set the map height explicitly to define the size of the div
@@ -201,19 +202,40 @@
       }
 
       function generateHeatMap(map) {
-        var heatmapData = [
-        new google.maps.LatLng(49.289070, -123.125500),
-        new google.maps.LatLng(49.289520, -123.127050),
-        new google.maps.LatLng(49.280320, -123.121320),
-        new google.maps.LatLng(49.286940, -123.124900),
-        new google.maps.LatLng(49.271530, -123.107830),
-        new google.maps.LatLng(49.270140, -123.110060),
-        ];
+        var heatmapData = []
+        loadJSON(function(response) {
+          jsonresponse = JSON.parse(response);
+          var count = Object.keys(jsonresponse).length;
+          for (i = 0; i < count; i++) {
+            heatmapData.push(new google.maps.LatLng(jsonresponse[i].Lat, jsonresponse[i].lang))
+          }
+
+        });
         var heatmap = new google.maps.visualization.HeatmapLayer({
           data: heatmapData
         });
         heatmap.setMap(map);
       }
+
+      function loadJSON(callback) {
+
+      var xobj = new XMLHttpRequest();
+      xobj.overrideMimeType("application/json");
+      xobj.open('GET', 'data.json', true);
+      xobj.onreadystatechange = function() {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+
+              // .open will NOT return a value but simply returns undefined in async mode so use a callback
+              callback(xobj.responseText);
+
+          }
+      }
+      xobj.send(null);
+
+      }
+
+      // Call to function with anonymous callback
+      
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPCfCDiuyrB7TgB6Qv6-pkDrO411LsYfk&libraries=places,visualization&callback=initMap"
     async defer></script>

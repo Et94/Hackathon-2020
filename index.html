@@ -1,13 +1,34 @@
 <!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <meta charset="utf-8">
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="text/javascript" src="data.json"></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Agency - Start Bootstrap Theme</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- Custom styles for this template -->
+    <link href="css/agency.min.css" rel="stylesheet">
+
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
@@ -22,52 +43,93 @@
       }
     </style>
 </head>
-<body>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#"> Name </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="#">Login</a>
-            <a class="nav-item nav-link" href="#">About</a>
+<body id="page-top">
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top" style=""> Name of Site </a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav text-uppercase ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="#about" style="color: #23272b">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="Hackathon-2020\login.html" style="color: #23272b">Login</a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
-<div class = "container-fluid"></div>
-<img src="images/meter-sunset.jpg" class="img-fluid" alt="Responsive image">
-<label for="where-to"> Where To:</label>
-        <!-- <input type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address"> -->
-<input id="pac-input" class="form-control" type="text" placeholder="Enter a location">
-<form style="background-color: lightgray; padding: 10px" id="walking_form">
-    <!-- <div class="form-group">
-        
-    </div> -->
-    <p> Walking Distance: </p>
-    <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin: 5px">
-        <label class="btn btn-secondary">
-            <input type="radio" name="options" id="one-min" autocomplete="off" checked > 1 Minute
-        </label>
-        <label class="btn btn-secondary">
-            <input type="radio" name="options" id="five-min" autocomplete="off" > 5 Minutes
-        </label>
-        <label class="btn btn-secondary">
-            <input type="radio" name="options" id="thirty-min" autocomplete="off" > 30 Minutes
-        </label>
+
+<header class="masthead">
+    <div class="container">
+        <div class="intro-text">
+            <div class="intro-lead-in"> Find Your Spot ! </div>
+            <div class="intro-heading text-uppercase"> text </div>
+            <!--        <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="#services">Tell Me More</a>-->
+            <div style="background-color: #23272b;">
+                <form style=";padding: 10px;">
+                    <div class="form-group">
+                        <label for="where-to" style="color: white"> Where To:</label>
+                        <input id="pac-input" type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address">
+                    </div>
+                    <p style="color: white"> Walking Distance: </p>
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin: 5px">
+                        <label class="btn btn-secondary" style="background-color: #23272b ; border-color: #fec810">
+                            <input type="radio" name="options" id="one-min" autocomplete="off" checked> 1 Minute
+                        </label>
+                        <label class="btn btn-secondary" style="background-color: #23272b ; border-color: #fec810">
+                            <input type="radio" name="options" id="five-min" autocomplete="off"> 5 Minutes
+                        </label>
+                        <label class="btn btn-secondary" style="background-color: #23272b ; border-color: #fec810">
+                            <input type="radio" name="options" id="thirty-min" autocomplete="off"> 30 Minutes
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-dark" style="padding: 10px"> Submit </button>
+                </form>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-dark" onclick="selectButton()"> Submit </button>
-</form>
+</header>
+</div>
+<!--<div class = "container-fluid"></div>-->
+<!--<img src="images/meter-sunset.jpg" class="img-fluid" alt="Responsive image">-->
+<!--<label for="where-to"> Where To:</label>-->
+<!--        &lt;!&ndash; <input type="address" class="form-control" id="where-to" aria-describedby="emailHelp" placeholder="Input Address"> &ndash;&gt;-->
+<!--<input id="pac-input" class="form-control" type="text" placeholder="Enter a location">-->
+<!--<form style="background-color: lightgray; padding: 10px">-->
+
+    <!-- <div class="form-group">
+
+    </div> -->
+
+<!--    <p> Walking Distance: </p>-->
+<!--    <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin: 5px">-->
+<!--        <label class="btn btn-secondary">-->
+<!--            <input type="radio" name="options" id="one-min" autocomplete="off" checked> 1 Minute-->
+<!--        </label>-->
+<!--        <label class="btn btn-secondary">-->
+<!--            <input type="radio" name="options" id="five-min" autocomplete="off"> 5 Minutes-->
+<!--        </label>-->
+<!--        <label class="btn btn-secondary">-->
+<!--            <input type="radio" name="options" id="thirty-min" autocomplete="off"> 30 Minutes-->
+<!--        </label>-->
+<!--    </div>-->
+<!--    <button type="submit" class="btn btn-dark"> Submit </button>-->
+<!--</form>-->
+
 <div id="map"></div>
     <script>
       var map;
       var service;
       var infowindow;
       var markers = []
+
 
 
       var timeWalkDist;
@@ -93,6 +155,7 @@
         }
       }
 
+
       function initMap() {
         var vancouver = new google.maps.LatLng(49.2827, -123.1207);
         var input = document.getElementById('pac-input');
@@ -100,15 +163,15 @@
         timeWalkDist = 500;
         map = new google.maps.Map(
             document.getElementById('map'), {center: vancouver, zoom: 11});
+
         generateHeatMap(map);
-        
 
         var marker = new google.maps.Marker({
           map: map,
           anchorPoint: new google.maps.Point(0, -29)
         });
         var autocomplete = new google.maps.places.Autocomplete(input);
-        
+
         autocomplete.bindTo('bounds', map);
         // Set the data fields to return when the user selects a place.
         autocomplete.setFields(
@@ -157,7 +220,7 @@
           searchLocation(place.geometry.location.lat(), place.geometry.location.lng(), map);
         });
 
-        
+
       }
 
       function searchLocation(place_lat, place_lng, map) {

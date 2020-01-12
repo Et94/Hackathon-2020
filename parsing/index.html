@@ -6,6 +6,8 @@
     <title>Data Parsing for QDS20</title>
 </head>
 <body>
+    <p>Replace the final line of the parseInfractions function with a call to your desired function. parseInfractions is called when a new file is selected below.</p><br />
+    <p>Select the parking ticket JSON file.</p>
     <input type="file" id="fileInput" name="files[]" />
     <script>
         function fileSelectionHandler(event) {
@@ -33,7 +35,7 @@
                     infractions.push(infractionAddress);
                 }
             }
-            console.log(infractions);
+            console.log(infractions);  // Replace with call to your desired function
         }
 
         function exportCSV(addresses) {
